@@ -1,11 +1,6 @@
 # coding=utf-8
 import csv
 import os
-import math
-# 一层卷积6*6,减少权重
-# set seed
-import matplotlib.pyplot as plt
-from mpmath import ln
 from sklearn.preprocessing import MinMaxScaler,StandardScaler
 
 os.environ['PYTHONHASHSEED'] = '0'
@@ -18,9 +13,6 @@ from keras.layers import Dense, Activation, Reshape, Dropout, Conv1D, MaxPooling
 logging.disable(logging.WARNING)
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 np.set_printoptions(threshold=10000000000000)
-
-batch_size = 160
-epochs = 1
 
 
 def load_traindata(path):
@@ -275,11 +267,8 @@ if __name__ == '__main__':
 
             param_after = np.asarray(model.get_weights())
 
-            # Average gradient by percentage. If number of samples weren't the same.
-            # Change this part according to FedAvg.
-            # 如果模型表现不好减少权重占比
             sumw.append(param_after)
-            #weight_acc += (param_after) * (1 /(num_clients*rate))
+
             score = model.evaluate(x_test, y_test, verbose=0)
             print('Client: '+str(c+1)+' with accuracy:', score[1])
             if c==0: acc1.append(score[1])
@@ -303,7 +292,6 @@ if __name__ == '__main__':
         weight = []
         accw=[]
         for c1 in range(len(nacc)):
-            #ra = round(10 * (-ln(acc[c2])))0.7172160541641564,0.69924,0.69442
             print(numw[c1]/sum(numw))
             print(nacc[c1]/sum(nacc))
             weight.append((nacc[c1]/sum(nacc))*(numw[c1]/sum(numw)))
